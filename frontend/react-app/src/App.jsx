@@ -31,6 +31,8 @@ function App() {
   const [showComparison, setShowComparison] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
   const [isFromCache, setIsFromCache] = useState(false)
+  const [showErrorModal, setShowErrorModal] = useState(false)
+  const [errorModalMessage, setErrorModalMessage] = useState('')
 
   useEffect(() => {
     fetchHistory()
@@ -76,6 +78,8 @@ function App() {
   const handleWeatherSearch = async () => {
     if (!city) {
       setError('Informe uma cidade.')
+      setErrorModalMessage('Por favor, informe uma cidade.')
+      setShowErrorModal(true)
       return
     }
 
@@ -124,11 +128,23 @@ function App() {
         }
       }
 
-      const response = await fetch(`${API_URL}/weather/${encodeURIComponent(city)}`)
+      const response = await fetch(`${API_URL}/weather/${city}`)
+      
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}))
+        const message = data.message || data.error || 'Cidade não encontrada. Verifique o nome e tente novamente.'
+        setErrorModalMessage(message)
+        setShowErrorModal(true)
+        setLoading(false)
+        return
+      }
+
       const data = await response.json()
 
-      if (data.error || !data.temperature) {
-        setError(data.error || 'Erro ao buscar clima.')
+      if (!data || data.temperature === null || data.temperature === undefined) {
+        const message = 'Dados de clima não disponíveis para a cidade informada.'
+        setErrorModalMessage(message)
+        setShowErrorModal(true)
         setLoading(false)
         return
       }
@@ -160,7 +176,10 @@ function App() {
       setIsFromCache(false)
       setLoading(false)
     } catch (err) {
-      setError('Erro ao buscar clima.')
+      console.error('Erro ao buscar clima:', err)
+      const msg = 'Erro ao buscar clima. Verifique sua conexão e tente novamente.'
+      setErrorModalMessage(msg)
+      setShowErrorModal(true)
       setLoading(false)
     }
   }
@@ -378,14 +397,14 @@ function App() {
                 )}
               </div>
 
-              {weather && weather.current && (
+              {weather?.location?.name && weather?.current?.temperature !== null && weather?.current?.temperature !== undefined && (
                 <div className="mt-8 space-y-6">
                   <div className="text-center py-6 border-t-2 border-gray-200">
                     <div className="flex items-center justify-center mb-4 text-blue-600">
                       {getWeatherIcon(weather.current.weather_descriptions?.[0])}
                     </div>
                     <h3 className="text-3xl font-bold text-gray-800 mb-2">
-                      {weather.location?.name}
+                      {weather.location.name}
                     </h3>
                     <p className="text-6xl font-bold text-gray-900 mb-2">
                       {weather.current.temperature}°C
@@ -531,6 +550,29 @@ function App() {
           onClose={() => setShowComparison(false)} 
         />
       )}
+
+     {showErrorModal && (
+       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowErrorModal(false)} />
+         <div className="relative bg-white rounded-xl shadow-2xl max-w-md w-full p-6 z-10 animate-fadeIn">
+           <div className="flex items-center gap-3 mb-4">
+             <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+               <span className="text-2xl">⚠️</span>
+             </div>
+             <h3 className="text-xl font-bold text-gray-900">Cidade não encontrada</h3>
+           </div>
+           <p className="text-gray-700 mb-6">{errorModalMessage}</p>
+           <div className="flex justify-end">
+             <button
+               onClick={() => { setShowErrorModal(false); setError('') }}
+               className="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition"
+             >
+               Fechar
+             </button>
+           </div>
+         </div>
+       </div>
+     )}
     </div>
   )
 }

@@ -72,9 +72,9 @@ function CityComparison({ history, onClose }) {
             icon: city2Data.icon
           },
           comparison: {
-            temperature_diff: city1Data.temperature - city2Data.temperature,
-            humidity_diff: city1Data.humidity - city2Data.humidity,
-            wind_speed_diff: city1Data.wind_speed - city2Data.wind_speed
+            temperature_diff: (city1Data.temperature || 0) - (city2Data.temperature || 0),
+            humidity_diff: (city1Data.humidity || 0) - (city2Data.humidity || 0),
+            wind_speed_diff: (city1Data.wind_speed || 0) - (city2Data.wind_speed || 0)
           }
         }
 
@@ -91,11 +91,17 @@ function CityComparison({ history, onClose }) {
 
       const data = await response.json()
 
-      if (!data.success) {
-        setError(data.message || 'Erro ao comparar cidades')
+      if (!response.ok || !data.success) {
+        const message = data.message || data.error || 'Erro ao comparar cidades'
+        setError(message)
         setLoading(false)
         return
       }
+
+      // garantir valores numéricos para diffs
+      data.comparison.temperature_diff = Number(data.comparison.temperature_diff || 0)
+      data.comparison.humidity_diff = Number(data.comparison.humidity_diff || 0)
+      data.comparison.wind_speed_diff = Number(data.comparison.wind_speed_diff || 0)
 
       setComparison(data)
       setLoading(false)

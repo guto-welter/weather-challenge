@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend-laravel
+      dockerfile: Dockerfile
+    container_name: weather-backend
+    restart: unless-stopped
+    working_dir: /var/www/html
+    ports:
+      - "8000:80"
+    volumes:
+      - ./backend-laravel:/var/www/html
+      - vendor_data:/var/www/html/vendor
+    env_file:
+      - ./backend-laravel/.env
+    networks:
+      - weather-network
+    command: >
+      sh -c "
+        composer install --no-interaction --prefer-dist --optimize-autoloader &&
+        chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database &&
+        chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache &&
+        chmod -R 775 /var/www/html/database &&
+        touch /var/www/html/database/database.sqlite &&
+        chmod 664 /var/www/html/database/database.sqlite &&
+        chown www-data:www-data /var/www/html/database/database.sqlite &&
+        php artisan key:generate --force &&
+        php artisan migrate --force &&
+        php artisan config:clear &&
+        php artisan route:cache &&
+        /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+      "
+
+volumes:
+  vendor_data:
+
+networks:
+  weather-network:
+    driver: bridge

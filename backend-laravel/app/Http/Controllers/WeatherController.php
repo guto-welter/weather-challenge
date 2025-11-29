@@ -31,8 +31,6 @@ class WeatherController extends Controller
             'raw_data' => $request->raw_data,
         ]);
 
-        Log::debug($weather);
-
         return response()->json($weather, 201);
     }
 
@@ -190,7 +188,7 @@ class WeatherController extends Controller
         $data = $this->weatherService->getCurrentWeather($city);
 
         if (isset($data['success']) && $data['success'] === false) {
-            return response()->json($data, 400);
+            abort(400, $data['message'] ?? 'Não foi possível obter dados meteorológicos para esta cidade');
         }
 
         return response()->json([
