@@ -1,0 +1,201 @@
+.theme-default {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.theme-sunny {
+  background: linear-gradient(135deg, #FDB99B 0%, #FCF6BA 50%, #87CEEB 100%);
+  animation: sunnyPulse 3s ease-in-out infinite;
+}
+
+.theme-rainy {
+  background: linear-gradient(135deg, #5f6f81 0%, #3d4c5c 50%, #2c3e50 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-rainy::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -10%;
+  width: 120%;
+  height: 200%;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 1px,
+    rgba(255, 255, 255, 0.03) 1px,
+    rgba(255, 255, 255, 0.03) 2px
+  );
+  animation: rain 0.5s linear infinite;
+}
+
+@keyframes rain {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(50px);
+  }
+}
+
+.theme-cloudy {
+  background: linear-gradient(135deg, #bdc3c7 0%, #7f8c8d 50%, #546e7a 100%);
+  animation: cloudyShift 8s ease-in-out infinite;
+}
+
+.theme-snowy {
+  background: linear-gradient(135deg, #E0EAFC 0%, #CFDEF3 50%, #B8C6DB 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-snowy::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 200%;
+  background-image: 
+    radial-gradient(circle, white 1px, transparent 1px),
+    radial-gradient(circle, white 1px, transparent 1px);
+  background-size: 50px 50px, 80px 80px;
+  background-position: 0 0, 40px 40px;
+  animation: snow 10s linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes snow {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.theme-night-clear {
+  background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-night-clear::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, white, transparent),
+    radial-gradient(2px 2px at 60px 70px, white, transparent),
+    radial-gradient(1px 1px at 50px 50px, white, transparent),
+    radial-gradient(1px 1px at 130px 80px, white, transparent),
+    radial-gradient(2px 2px at 90px 10px, white, transparent);
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.theme-night-cloudy {
+  background: linear-gradient(135deg, #232526 0%, #414345 100%);
+}
+
+.theme-night-rainy {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-night-rainy::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -10%;
+  width: 120%;
+  height: 200%;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 1px,
+    rgba(255, 255, 255, 0.05) 1px,
+    rgba(255, 255, 255, 0.05) 2px
+  );
+  animation: rain 0.4s linear infinite;
+}
+
+.theme-night {
+  background: linear-gradient(135deg, #434343 0%, #000000 100%);
+}
+
+@keyframes sunnyPulse {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.05);
+  }
+}
+
+@keyframes cloudyShift {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(0.95);
+  }
+}
+
+.container {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-in;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.theme-night .text-white,
+.theme-night-clear .text-white,
+.theme-night-cloudy .text-white,
+.theme-night-rainy .text-white,
+.theme-rainy .text-white {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
