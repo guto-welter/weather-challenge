@@ -5,13 +5,14 @@ O frontend foi desenvolvido com HTML + CSS + jQuery, e o backend com Laravel (PH
 
 Este README explica:
 Como iniciar o projeto Laravel do zero
-Requisitos mínimos
+Requisitos mínimos: PHP 8.4
 Como instalar dependências
 Como configurar o ambiente
 Como rodar o servidor
 Como rodar migrations
 Como usar o frontend
 
+NA API:
 Após clonar o projeto, em seu terminal execute(estando na raiz do projeto):
 - composer install
 - cp .env.example .env
@@ -31,4 +32,11 @@ Faça o link da storage:
 - php artisan storage:link
 Está pronto para iniciar o servidor local:
 - php artisan serve
+
+NO FRONT:
+Feito com React e tailwind
+Node: 22
+Rode:
+- npm install
+- npm run dev
 
