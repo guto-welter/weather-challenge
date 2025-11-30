@@ -42,6 +42,10 @@ Edite o `.env` e adicione sua chave da Weatherstack:
 ```env
 WEATHERSTACK_KEY=sua_chave_aqui
 ```
+E também o sqlite:
+```env
+DB_DATABASE=database/database.sqlite
+```
 
 Suba o container Docker:
 ```bash
