@@ -1,101 +1,127 @@
-Weather Challenge — Documentação Completa
+Weather Challenge
 
-Weather Challenge é uma aplicação para consultar o clima atual de qualquer cidade, salvar o histórico dessas consultas e comparar previsões entre duas localidades.
+Weather Challenge é uma aplicação que permite consultar o clima atual de qualquer cidade, salvar um histórico de consultas e comparar previsões entre diferentes localidades.
 
-Frontend: React + Tailwind CSS
+- **Frontend:** React + Tailwind CSS  
+- **Backend:** Laravel 11 (100% rodando via Docker — sem precisar instalar PHP/Composer localmente)
 
-Backend: Laravel (PHP 8.4)
+Tecnologias Utilizadas
 
-Este README explica passo a passo como iniciar o projeto, tanto o backend quanto o frontend.
+### **Backend**
+- Laravel 11  
+- PHP 8.4 (Docker)  
+- SQLite  
+- Weatherstack API
+- API IBGE
 
-Requisitos
+**Frontend**
+- React 18  
+- Vite  
+- Tailwind CSS  
 
-Antes de começar, certifique-se de ter instalado:
 
-PHP >= 8.4
+# 🐳 Como Rodar o Backend (Laravel) com Docker
 
-Composer
+O backend é totalmente automatizado via Docker.  
 
-Node.js >= 22
+##  1. Clonar o Repositório
 
-NPM
+git clone https://github.com/guto-welter/weather-challenge.git
+cd weather-challenge
+2. Configurar o .env
+Entre na pasta do backend:
 
-SQLite
+cd backend-laravel
+cp .env.example .env
+
+Edite o .env e coloque sua chave da Weatherstack:
+WEATHERSTACK_KEY=sua_chave_aqui
+
+Se ainda não possui, crie uma conta gratuita em:
+https://weatherstack.com
+
+3. Subir o container Docker
+Copiar código
+sudo docker-compose up -d --build
+Ao subir o container, o Docker automaticamente:
+
+✔ Instala dependências do Laravel
+✔ Gera APP_KEY
+✔ Cria o banco SQLite
+✔ Roda migrations
+✔ Cria o storage link
+✔ Sobe o servidor
+
+Após iniciar, o backend ficará disponível em:
+http://localhost:8000
+Atente para porta estar disponível
+
+ Como Rodar o Frontend (React + Tailwind)
+Agora começamos o frontend:
+
+cd ../frontend/react-app
+1. Instalar dependências
+npm install
+
+2. Rodar o servidor de desenvolvimento
+npm run dev
+
+O frontend estará em:
+ http://localhost:5173
+
+Certifique-se de que o backend Docker esteja rodando.
+
+ Funcionalidades
+✔ Buscar clima atual por cidade
+✔ Salvar histórico de consultas
+✔ Comparar previsões de duas cidades
+✔ Interface simples e responsiva com Tailwind
+✔ Backend totalmente isolado em Docker
+
+Observações:
+Recomendado Node.js >= 22
+
+Frontend utiliza Vite, por isso carrega rapidamente
+
+Backend fica 100% isolado no container
+
+Porque resolvi usar Docker?
+- Optei por utilizar Docker para facilitar a execução do sistema. Assim, não é necessário configurar todo o ambiente PHP manualmente na máquina. Basta ter o Docker instalado e subir os containers para que tudo funcione automaticamente.
+Também optei por desenvolver o front-end em React e Tailwind para tornar a interface mais dinâmica e responsiva. Acredito que o Blade, do Laravel, é excelente para gerar relatórios e páginas simples; porém, quando se trata de interação direta com o usuário, ele acaba sendo mais limitado.
 
 Backend (Laravel)
 
-O backend é responsável por fornecer a API que o frontend consome.
-
-Passo 1: Clonar o repositório
-git clone https://github.com/guto-welter/weather-challenge.git
-cd weather-challenge/backend-laravel
-
-Passo 2: Instalar dependências
-composer install
-
-Passo 3: Configurar o ambiente
-cp .env.example .env
-php artisan key:generate
-
-
-Edite o arquivo .env para configurar o banco de dados SQLite:
-
-DB_CONNECTION=sqlite
-DB_DATABASE=./database/database.sqlite
+A estrutura do backend foi pensada para manter o código limpo, organizado e fácil de manter:
+backend-laravel/
+ ├── app/
+ │    ├── Http/Controllers/   # Entrada e saída das requisições
+ │    ├── Services/            # Regras de negócio (consulta Weatherstack, salvamento, histórico)
+ │    ├── Models/              # Modelos do banco de dados
+ │    └── ...
+ ├── routes/api.php            # Rotas da API
+ ├── database/                 # Migrations e seeds
+ ├── Dockerfile
+ └── docker-compose.yml
+ 
+- Centralizei a regra de negócio em Services, deixando controllers mais limpos.
+- Usei SQLite por ser rápido, leve e não exigir mais containers no desafio, e também para salvar local, sem precisar configurar um banco por fora, algo assim.
+- Organizei a API com rotas claras: buscar clima, salvar histórico, listar histórico, comparar cidades.(usando padrão de linguagem inglês)
 
 
-Certifique-se de criar o arquivo database/database.sqlite se ele não existir:
-
-touch database/database.sqlite
-
-Passo 4: Configurar a API do clima
-
-Acesse Weatherstack
-, crie uma conta gratuita e obtenha sua Access Key.
-Adicione no .env:
-
-WEATHERSTACK_KEY=SuaAccessKeyAqui
-
-Passo 5: Rodar migrations
-php artisan migrate
-
-Passo 6: Criar link da storage
-php artisan storage:link
-
-Passo 7: Rodar o servidor local
-php artisan serve
-
-
-O backend estará disponível em http://127.0.0.1:8000.
-
-Frontend (React + Tailwind CSS)
-
-O frontend consome a API Laravel e exibe a interface para o usuário.
-
-Passo 1: Navegar até a pasta do frontend
-cd ../frontend/react-app
-
-Passo 2: Instalar dependências
-npm install
-
-Passo 3: Rodar o servidor de desenvolvimento
-npm run dev
-
-
-O frontend estará disponível em http://localhost:5173 (ou outra porta exibida no terminal).
-
-Certifique-se de que o backend Laravel esteja rodando antes de testar o frontend.
-
-Uso
-
-Abra o frontend no navegador.
-
-Busque uma cidade para ver o clima atual.
-
-Salve consultas e compare previsões entre diferentes cidades.
-
-Observações
-
-Este projeto usa React 18 e Tailwind CSS 3.x.
-
-Recomenda-se Node >= 22 para evitar problemas de compatibilidade com dependências modernas.
+Como este desafio é focado em poucas telas, centralizei toda a lógica no arquivo App.jsx. Isso tornou o desenvolvimento mais rápido e direto, sem necessidade de uma estrutura complexa.
+No entanto, se fosse uma aplicação maior, com navegação entre páginas, dashboards, histórico detalhado, gráficos, etc., eu organizaria o projeto seguindo uma arquitetura mais escalável, como:
+frontend/
+ ├── src/
+ │    ├── components/       # Componentes reutilizáveis (cards, inputs, botões)
+ │    ├── pages/            # Páginas principais (Home, Histórico, Comparação)
+ │    ├── hooks/            # Lógica compartilhada (ex: ViaCEP)
+ │    ├── services/         # Comunicação com o backend Laravel
+ │    ├── utils/            # Funções auxiliares
+ │    └── ...
+ └── ...
+Essa separação permite:
+maior organização
+reutilização de código
+testes isolados
+manutenção mais simples
+escalabilidade conforme a aplicação cresce
