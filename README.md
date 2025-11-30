@@ -19,9 +19,8 @@ Aplicação para consultar o clima atual de qualquer cidade, salvar histórico d
 ## 📋 Pré-requisitos
 
 - Docker e Docker Compose
+- Node.js >= 22
 - Conta gratuita na [Weatherstack](https://weatherstack.com) para obter API key
-
-> **Nota:** Não é necessário ter PHP, Composer ou Node.js instalados localmente. Tudo roda dentro dos containers Docker.
 
 ## 🐳 Instalação e Execução
 
@@ -32,7 +31,7 @@ git clone https://github.com/guto-welter/weather-challenge.git
 cd weather-challenge
 ```
 
-### 2. Configurar o Backend
+### 2. Configurar e rodar o Backend (Laravel)
 
 ```bash
 cd backend-laravel
@@ -43,34 +42,37 @@ Edite o `.env` e adicione sua chave da Weatherstack:
 ```env
 WEATHERSTACK_KEY=sua_chave_aqui
 ```
+E também o sqlite:
+```env
+DB_DATABASE=database/database.sqlite
+```
 
-### 3. Rodar toda a aplicação com Docker
-
-Volte para a raiz do projeto e execute:
-
+Suba o container Docker:
 ```bash
-cd ..
 sudo docker-compose up -d --build
 ```
 
 O Docker automaticamente irá:
-
-**Backend:**
 - ✔ Instalar dependências do Laravel
 - ✔ Gerar APP_KEY
 - ✔ Criar o banco SQLite
 - ✔ Executar migrations
 - ✔ Criar storage link
-- ✔ Iniciar o servidor (porta interna apenas)
+- ✔ Iniciar o servidor
 
-**Frontend:**
-- ✔ Instalar dependências do React
-- ✔ Configurar proxy para o backend
-- ✔ Iniciar servidor de desenvolvimento
+Backend disponível em: **http://localhost:8000**
 
-**Aplicação disponível em: http://localhost:5173**
+### 3. Rodar o Frontend (React)
 
-O backend roda internamente na rede Docker e não é exposto diretamente. O frontend faz proxy das requisições `/api` para o backend automaticamente.
+Em outro terminal:
+
+```bash
+cd frontend/react-app
+npm install
+npm run dev
+```
+
+Frontend disponível em: **http://localhost:5173**
 
 ## ✨ Funcionalidades
 
