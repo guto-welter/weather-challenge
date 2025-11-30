@@ -20,7 +20,7 @@ import CityComparison from './components/CityComparison'
 import HistorySearch from './components/HistorySearch'
 import { normalizeString } from './utils/normalizeString'
 
-const API_URL = 'http://localhost:8000/api'
+const API_URL = '/api'
 
 function App() {
   const [cep, setCep] = useState('')

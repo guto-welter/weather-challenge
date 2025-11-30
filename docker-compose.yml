@@ -8,8 +8,8 @@ services:
     container_name: weather-backend
     restart: unless-stopped
     working_dir: /var/www/html
-    ports:
-      - "8000:80"
+    expose:
+      - "80"
     volumes:
       - ./backend-laravel:/var/www/html
       - vendor_data:/var/www/html/vendor
@@ -32,6 +32,25 @@ services:
         php artisan route:cache &&
         /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
       "
+
+  frontend:
+    build:
+      context: ./frontend/react-app
+      dockerfile: Dockerfile
+    container_name: weather-frontend
+    restart: unless-stopped
+    working_dir: /app
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/react-app:/app
+      - /app/node_modules
+    networks:
+      - weather-network
+    depends_on:
+      - backend
+    environment:
+      - VITE_API_URL=http://backend
 
 volumes:
   vendor_data:

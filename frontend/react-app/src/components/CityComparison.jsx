@@ -10,7 +10,7 @@ import {
   X
 } from 'lucide-react'
 
-const API_URL = 'http://localhost:8000/api'
+const API_URL = '/api'
 
 function CityComparison({ history, onClose }) {
   const [city1, setCity1] = useState('')
