@@ -1,186 +1,123 @@
-Weather Challenge
+# Weather Challenge
 
-Weather Challenge é uma aplicação que permite consultar o clima atual de qualquer cidade, salvar um histórico de consultas e comparar previsões entre diferentes localidades.
+Aplicação para consultar o clima atual de qualquer cidade, salvar histórico de consultas e comparar previsões entre diferentes localidades.
 
-- **Frontend:** React + Tailwind CSS  
-- **Backend:** Laravel 11 (100% rodando via Docker — sem precisar instalar PHP/Composer localmente)
+## 🚀 Tecnologias
 
-Tecnologias Utilizadas
-
-### **Backend**
-- Laravel 11  
-- PHP 8.4 (Docker)  
-- SQLite  
+### Backend
+- Laravel 11
+- PHP 8.4 (Docker)
+- SQLite
 - Weatherstack API
 - API IBGE
 
-**Frontend**
-- React 18  
-- Vite  
-- Tailwind CSS  
+### Frontend
+- React 18
+- Vite
+- Tailwind CSS
 
+## 📋 Pré-requisitos
 
-# 🐳 Como Rodar o Backend (Laravel) com Docker
+- Docker e Docker Compose
+- Node.js >= 22
+- Conta gratuita na [Weatherstack](https://weatherstack.com) para obter API key
 
-O backend é totalmente automatizado via Docker.  
+## 🐳 Instalação e Execução
 
-##  1. Clonar o Repositório
+### 1. Clonar o repositório
 
+```bash
 git clone https://github.com/guto-welter/weather-challenge.git
-
 cd weather-challenge
+```
 
-2. Configurar o .env
+### 2. Configurar e rodar o Backend (Laravel)
 
-Entre na pasta do backend:
-
+```bash
 cd backend-laravel
-
 cp .env.example .env
+```
 
-Edite o .env e coloque sua chave da Weatherstack:
-
+Edite o `.env` e adicione sua chave da Weatherstack:
+```env
 WEATHERSTACK_KEY=sua_chave_aqui
+```
 
-Coloque também o database:
-
-DB_DATABASE=database/database.sqlite
-
-Se ainda não possui, crie uma conta gratuita em:
-
-https://weatherstack.com
-
-3. Subir o container Docker
-4. 
-Copiar código
-
+Suba o container Docker:
+```bash
 sudo docker-compose up -d --build
+```
 
-Ao subir o container, o Docker automaticamente:
+O Docker automaticamente irá:
+- ✔ Instalar dependências do Laravel
+- ✔ Gerar APP_KEY
+- ✔ Criar o banco SQLite
+- ✔ Executar migrations
+- ✔ Criar storage link
+- ✔ Iniciar o servidor
 
-✔ Instala dependências do Laravel
+Backend disponível em: **http://localhost:8000**
 
-✔ Gera APP_KEY
+### 3. Rodar o Frontend (React)
 
-✔ Cria o banco SQLite
+Em outro terminal:
 
-✔ Roda migrations
-
-✔ Cria o storage link
-
-✔ Sobe o servidor
-
-Após iniciar, o backend ficará disponível em:
-
-http://localhost:8000
-
-Atente para porta estar disponível
-
- Como Rodar o Frontend (React + Tailwind)
- 
-Agora começamos o frontend:
-
-cd ../frontend/react-app
-
-1. Instalar dependências
-2. 
+```bash
+cd frontend/react-app
 npm install
-
-3. Rodar o servidor de desenvolvimento
-4. 
 npm run dev
+```
 
-O frontend estará em:
+Frontend disponível em: **http://localhost:5173**
 
- http://localhost:5173
+## ✨ Funcionalidades
 
-Certifique-se de que o backend Docker esteja rodando.
+- ✔ Buscar clima atual por cidade
+- ✔ Salvar histórico de consultas
+- ✔ Comparar previsões de duas cidades
+- ✔ Interface responsiva com Tailwind CSS
+- ✔ Backend isolado em Docker
 
- Funcionalidades
- 
-✔ Buscar clima atual por cidade
+## 🏗️ Arquitetura
 
-✔ Salvar histórico de consultas
+### Backend (Laravel)
 
-✔ Comparar previsões de duas cidades
-
-✔ Interface simples e responsiva com Tailwind
-
-✔ Backend totalmente isolado em Docker
-
-Observações:
-Recomendado Node.js >= 22
-
-Frontend utiliza Vite, por isso carrega rapidamente
-
-Backend fica 100% isolado no container
-
-Porque resolvi usar Docker?
-
-- Optei por utilizar Docker para facilitar a execução do sistema. Assim, não é necessário configurar todo o ambiente PHP manualmente na máquina. Basta ter o Docker instalado e subir os containers para que tudo funcione automaticamente.
-- 
-Também optei por desenvolver o front-end em React e Tailwind para tornar a interface mais dinâmica e responsiva. Acredito que o Blade, do Laravel, é excelente para gerar relatórios e páginas simples; porém, quando se trata de interação direta com o usuário, ele acaba sendo mais limitado.
-
-Backend (Laravel)
-
-A estrutura do backend foi pensada para manter o código limpo, organizado e fácil de manter:
-
+```
 backend-laravel/
-
  ├── app/
- 
  │    ├── Http/Controllers/   # Entrada e saída das requisições
- 
- │    ├── Services/            # Regras de negócio (consulta Weatherstack, salvamento, histórico)
- 
- │    ├── Models/              # Modelos do banco de dados
- 
- │    └── ...
- 
+ │    ├── Services/            # Regras de negócio (Weatherstack, histórico)
+ │    └── Models/              # Modelos do banco de dados
  ├── routes/api.php            # Rotas da API
- 
- ├── database/                 # Migrations e seeds
- 
+ ├── database/                 # Migrations
  ├── Dockerfile
- 
  └── docker-compose.yml
- 
-- Centralizei a regra de negócio em Services, deixando controllers mais limpos.
-- 
-- Usei SQLite por ser rápido, leve e não exigir mais containers no desafio, e também para salvar local, sem precisar configurar um banco por fora, algo assim.
-- 
-- Organizei a API com rotas claras: buscar clima, salvar histórico, listar histórico, comparar cidades.(usando padrão de linguagem inglês)
+```
 
+**Decisões de arquitetura:**
+- Regras de negócio centralizadas em Services (controllers limpos)
+- SQLite para simplicidade (rápido, leve, sem containers adicionais)
+- API RESTful com rotas claras em inglês
 
-Como este desafio é focado em poucas telas, centralizei toda a lógica no arquivo App.jsx. Isso tornou o desenvolvimento mais rápido e direto, sem necessidade de uma estrutura complexa.
+### Frontend (React)
 
-No entanto, se fosse uma aplicação maior, com navegação entre páginas, dashboards, histórico detalhado, gráficos, etc., eu organizaria o projeto seguindo uma arquitetura mais escalável, como:
+**Estrutura atual:** Lógica centralizada em `App.jsx` devido ao escopo pequeno do desafio.
 
+**Para aplicações maiores**, a estrutura recomendada seria:
+```
 frontend/
-
  ├── src/
- 
- │    ├── components/       # Componentes reutilizáveis (cards, inputs, botões)
- 
- │    ├── pages/            # Páginas principais (Home, Histórico, Comparação)
- 
- │    ├── hooks/            # Lógica compartilhada (ex: ViaCEP)
- 
- │    ├── services/         # Comunicação com o backend Laravel
- 
- │    ├── utils/            # Funções auxiliares
- 
- │    └── ...
- 
- └── ...
-Essa separação permite:
+ │    ├── components/       # Componentes reutilizáveis
+ │    ├── pages/            # Páginas principais
+ │    ├── hooks/            # Lógica compartilhada
+ │    ├── services/         # Comunicação com backend
+ │    └── utils/            # Funções auxiliares
+```
 
-maior organização
+## 💡 Por que estas escolhas?
 
-reutilização de código
+**Docker:** Elimina necessidade de configurar PHP/Composer localmente. Basta ter Docker instalado.
 
-testes isolados
+**React + Tailwind:** Interface dinâmica e responsiva. Blade é excelente para relatórios e páginas simples, mas React oferece melhor experiência para interação com usuário.
 
-manutenção mais simples
-
-escalabilidade conforme a aplicação cresce
+**SQLite:** Ideal para desenvolvimento e testes. Não requer configuração de servidor de banco de dados.
