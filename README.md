@@ -1,4 +1,6 @@
-# Weather Challenge
+ # Weather Challenge
+
+![Demonstração](assets/giffDesafio.gif)
 
 Aplicação para consultar o clima atual de qualquer cidade, salvar histórico de consultas e comparar previsões entre diferentes localidades.
 
