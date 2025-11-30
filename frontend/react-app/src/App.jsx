@@ -17,6 +17,8 @@ import {
   Save
 } from 'lucide-react'
 import CityComparison from './components/CityComparison'
+import HistorySearch from './components/HistorySearch'
+import { normalizeString } from './utils/normalizeString'
 
 const API_URL = 'http://localhost:8000/api'
 
@@ -88,8 +90,9 @@ function App() {
     setSaveSuccess(false)
 
     try {
+      const normalizedCity = normalizeString(city)
       const cachedCity = history.find(item => 
-        item.city.toLowerCase() === city.toLowerCase() &&
+        normalizeString(item.city) === normalizedCity &&
         item.temperature !== null
       )
 
@@ -265,7 +268,7 @@ function App() {
   const uniqueHistoryCities = history.reduce((acc, item) => {
     if (item.temperature !== null && item.temperature !== undefined) {
       const exists = acc.find(city => 
-        city.city.toLowerCase() === item.city.toLowerCase()
+        normalizeString(city.city) === normalizeString(item.city)
       )
       if (!exists) {
         acc.push(item)
@@ -502,42 +505,52 @@ function App() {
                   Nenhuma pesquisa salva ainda
                 </p>
               ) : (
-                <div className="space-y-3 max-h-96 overflow-y-auto">
-                  {uniqueHistoryCities.map((item, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleHistoryClick(item)}
-                      className="p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg hover:from-blue-50 hover:to-blue-100 cursor-pointer transition border border-gray-200 hover:border-blue-300"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <p className="font-semibold text-gray-800 flex items-center gap-1">
-                            <MapPin className="w-4 h-4" />
-                            {item.city}
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            {item.temperature}°C
-                          </p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            {new Date(item.created_at).toLocaleString('pt-BR', {
-                              day: '2-digit',
-                              month: '2-digit',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
-                          </p>
+                <>
+                  <HistorySearch 
+                    history={history} 
+                    onSelectCity={handleHistoryClick}
+                  />
+                  
+                  <div className="mt-4">
+                    <p className="text-xs text-gray-500 mb-2 font-medium">Todas as pesquisas:</p>
+                    <div className="space-y-3 max-h-96 overflow-y-auto">
+                      {uniqueHistoryCities.map((item, index) => (
+                        <div
+                          key={index}
+                          onClick={() => handleHistoryClick(item)}
+                          className="p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-lg hover:from-blue-50 hover:to-blue-100 cursor-pointer transition border border-gray-200 hover:border-blue-300"
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <p className="font-semibold text-gray-800 flex items-center gap-1">
+                                <MapPin className="w-4 h-4" />
+                                {item.city}
+                              </p>
+                              <p className="text-sm text-gray-600">
+                                {item.temperature}°C
+                              </p>
+                              <p className="text-xs text-gray-500 mt-1">
+                                {new Date(item.created_at).toLocaleString('pt-BR', {
+                                  day: '2-digit',
+                                  month: '2-digit',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </p>
+                            </div>
+                            {item.icon && (
+                              <img 
+                                src={item.icon} 
+                                alt={item.description}
+                                className="w-10 h-10"
+                              />
+                            )}
+                          </div>
                         </div>
-                        {item.icon && (
-                          <img 
-                            src={item.icon} 
-                            alt={item.description}
-                            className="w-10 h-10"
-                          />
-                        )}
-                      </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                </>
               )}
             </div>
           </div>
