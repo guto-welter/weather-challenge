@@ -36,6 +36,8 @@ cp .env.example .env
 
 Edite o .env e coloque sua chave da Weatherstack:
 WEATHERSTACK_KEY=sua_chave_aqui
+Coloque também o database:
+DB_DATABASE=database/database.sqlite
 
 Se ainda não possui, crie uma conta gratuita em:
 https://weatherstack.com
