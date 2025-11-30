@@ -1,6 +1,8 @@
  # Weather Challenge
 
-![Demonstrate](assets/gif.gif)
+<p align="center">
+  <img src="/frontend/react-app/src/assets/gif.gif" alt="Demonstrate" />
+</p>
 
 Aplicação para consultar o clima atual de qualquer cidade, salvar histórico de consultas e comparar previsões entre diferentes localidades.
 
